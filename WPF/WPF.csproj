@@ -94,5 +94,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CA-utils\CA-utils.csproj">
+      <Project>{2b5b764e-178c-4091-a6e7-44103f242036}</Project>
+      <Name>CA-utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HuffmanCode\HuffmanCode.csproj">
+      <Project>{8b56e438-1ac9-43ac-93b0-7e3b7f90de83}</Project>
+      <Name>HuffmanCode</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
