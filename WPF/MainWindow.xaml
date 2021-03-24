@@ -5,17 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF"
         mc:Ignorable="d"
-        Title="Алгоритмы сжатия" Height="450" Width="800" MinHeight="450" MinWidth="800" FontFamily="Unispace" FontSize="18">
-    <Grid>
-        <Button Content="Сжать" HorizontalAlignment="Left" Margin="540,166,0,0" VerticalAlignment="Top" Width="90" Height="32" Click="Button_Click"/>
-        <TextBox x:Name="testInput" HorizontalAlignment="Left" Height="32" Margin="209,166,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="286"/>
-        <RichTextBox x:Name="testOutput" HorizontalAlignment="Left" Height="146" Margin="209,217,0,0" VerticalAlignment="Top" Width="421">
-            <FlowDocument>
-                <Paragraph>
-                    <Run Text="RichTextBox"/>
-                </Paragraph>
-            </FlowDocument>
-        </RichTextBox>
+        Title="Алгоритмы сжатия данных" Height="450" Width="800" MinHeight="450" MinWidth="800" FontFamily="Verdana" FontSize="18">
+    <StackPanel>
+        <Menu FontFamily="Verdana">
+            <MenuItem Header="Файл" FontSize="17">
+                <MenuItem Header="Открыть"/>
+                <MenuItem Header="Закрыть"/>
+                <Separator/>
+                <MenuItem Header="Сохранить"/>
+                <MenuItem Header="Сохранить как"/>
+                <Separator/>
+                <MenuItem x:Name="MenuAlgorithms" Header="Выйти"/>
+            </MenuItem>
+            <MenuItem Header="Алгоритмы" FontSize="17">
+                <MenuItem Header="Коды Хаффмана">
+                    <MenuItem Header="Закодировать" Click="MenuItem_Click"/>
+                    <MenuItem Header="Декодировать" Click="MenuItem_Click"/>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
 
-    </Grid>
+    </StackPanel>
 </Window>
