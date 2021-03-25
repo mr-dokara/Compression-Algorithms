@@ -6,11 +6,20 @@
         xmlns:local="clr-namespace:WPF"
         mc:Ignorable="d"
         Title="Алгоритмы сжатия данных" Height="450" Width="800" MinHeight="450" MinWidth="800" FontFamily="Verdana" FontSize="18">
-    <StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
         <Menu FontFamily="Verdana">
             <MenuItem Header="Файл" FontSize="17">
-                <MenuItem Header="Открыть"/>
-                <MenuItem Header="Закрыть"/>
+                <MenuItem Header="Открыть" Click="MenuItem_Open"/>
+                <MenuItem Header="Очистить" Click="MenuItem_Clear"/>
                 <Separator/>
                 <MenuItem Header="Сохранить"/>
                 <MenuItem Header="Сохранить как"/>
@@ -25,5 +34,31 @@
             </MenuItem>
         </Menu>
 
-    </StackPanel>
+        <Grid Grid.Row="1" Margin="0,5,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="70"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Content="Файл:"/>
+            <TextBox x:Name="tbFilePath" VerticalAlignment="Center" TextWrapping="NoWrap" Text="не выбран" IsReadOnly="True" Grid.Column="1" Margin="0,0,10,0"/>
+        </Grid>
+
+        <Label Content="Текст из файла:" HorizontalAlignment="Left" Margin="0,10,0,0" Grid.Row="2"/>
+        <TextBox x:Name="tbText" Height="auto" MinHeight="100" Margin="10,0,10,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"  Grid.Row="3"/>
+
+        <Label Content="Закодированный текст:" HorizontalAlignment="Left" Margin="0,10,0,0"  Grid.Row="4"/>
+
+
+        <Grid Margin="10,0,10,10" MinHeight="100" Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="0.3*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="tbEncodedText" Height="auto" TextWrapping="Wrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,5,0"/>
+            <TextBox x:Name="tbCharToCode" Height="auto" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="5,0,0,0" Grid.Column="1"/>
+        </Grid>
+
+    </Grid>
 </Window>

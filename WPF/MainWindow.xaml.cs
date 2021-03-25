@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CA_utils;
 using HuffmanCode;
+using Microsoft.Win32;
 
 
 namespace WPF
@@ -21,17 +23,10 @@ namespace WPF
     public partial class MainWindow : Window
     {
         private HashSet<ICompression> AlgorithmsUsed = new HashSet<ICompression>();
-        private string lastEncodedText;
-
 
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -39,8 +34,37 @@ namespace WPF
             MenuItem item = sender as MenuItem;
             ICompression algorithm = GetAlgorithm((item.Parent as MenuItem).Header.ToString());
 
-            if (item.Header.ToString()[0] == 'З') MessageBox.Show(lastEncodedText = algorithm.Encode("sdfgdfghcvx;,bmsdel;kshl;kdfngvzxxdfgsdbklajsbdvkjbdesoirlbslkdjf"));
-            else if (item.Header.ToString()[0] == 'Д') MessageBox.Show(algorithm.Decode(lastEncodedText));
+            if (item.Header.ToString()[0] == 'З')
+            {
+                tbEncodedText.Text = algorithm.Encode(tbText.Text);
+                tbCharToCode.Text = algorithm.GetCharToCode();
+            }
+            else if (item.Header.ToString()[0] == 'Д')
+            {
+                string decodedText;
+                try { decodedText = algorithm.Decode(tbEncodedText.Text); }
+                catch
+                {
+                    AlgorithmsUsed.Clear();
+                    algorithm = GetAlgorithm((item.Parent as MenuItem).Header.ToString());
+                    decodedText = algorithm.Decode(tbEncodedText.Text);
+                }
+                
+
+                tbText.Text = decodedText;
+            }
+        }
+
+        private void MenuItem_Open(object sender, RoutedEventArgs e)
+        {
+            var ofd = new OpenFileDialog();
+            ofd.Filter = "Text files|*.txt";
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog() == true)
+            {
+                tbFilePath.Text = ofd.FileName;
+                tbText.Text = File.ReadAllText(ofd.FileName);
+            }
         }
 
         private ICompression GetAlgorithm(string name)
@@ -56,9 +80,16 @@ namespace WPF
             }
             return null;
         }
+
+        private void MenuItem_Clear(object sender, RoutedEventArgs e)
+        {
+            tbText.Text = String.Empty;
+            tbEncodedText.Text = String.Empty;
+            tbCharToCode.Text = String.Empty;
+        }
     }
 
-    
+
 
     public class BindableMenuItem
     {

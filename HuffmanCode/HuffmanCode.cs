@@ -77,5 +77,19 @@ namespace HuffmanCode
                 _CodeToChar.Add(pair.Value, pair.Key);
             }
         }
+
+        string ICompression.GetCharToCode()
+        {
+            return string.Join("\n", _CharToCode.Select(x =>
+            {
+                switch (x.Key)
+                {
+                    case '\0': return $"'\\0' - {x.Value}";
+                    case '\r': return $"'\\r' - {x.Value}";
+                    case '\n': return $"'\\n' - {x.Value}";
+                    default: return $"'{x.Key}' - {x.Value}";
+                }
+            }));
+        }
     }
 }
