@@ -4,6 +4,6 @@
     {
         string Encode(string text);
         string Decode(string text);
-        string GetCharToCode();
+        string ToString();
     }
 }

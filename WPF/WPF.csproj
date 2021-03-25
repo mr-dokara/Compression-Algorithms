@@ -103,6 +103,10 @@
       <Project>{8b56e438-1ac9-43ac-93b0-7e3b7f90de83}</Project>
       <Name>HuffmanCode</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ShannonFanoCodes\ShannonFanoCodes.csproj">
+      <Project>{6bd00cf5-efe8-46c5-80e9-781a55614469}</Project>
+      <Name>ShannonFanoCodes</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

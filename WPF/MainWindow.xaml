@@ -31,6 +31,10 @@
                     <MenuItem Header="Закодировать" Click="MenuItem_Click"/>
                     <MenuItem Header="Декодировать" Click="MenuItem_Click"/>
                 </MenuItem>
+                <MenuItem Header="Коды Фано-Шеннона">
+                    <MenuItem Header="Закодировать" Click="MenuItem_Click"/>
+                    <MenuItem Header="Декодировать" Click="MenuItem_Click"/>
+                </MenuItem>
             </MenuItem>
         </Menu>
 

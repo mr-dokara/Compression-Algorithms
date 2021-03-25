@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using CA_utils;
 
-namespace HuffmanCode
+namespace ShannonFanoCodes
 {
-    public class HuffmanCode : ICompression
+    public class ShannonFanoCodes : ICompression
     {
         private Dictionary<char, string> _CharToCode;
         private Dictionary<string, char> _CodeToChar;
@@ -58,20 +59,9 @@ namespace HuffmanCode
                 return;
             }
 
-            PriorityQueue queue = new PriorityQueue();
-            foreach (var pair in frequencyDict)
-            {
-                queue.Enqueue(BinaryTree.Create(pair.Key, pair.Value));
-            }
 
-            while (queue.Count > 1)
-            {
-                var binTree = BinaryTree.Create(queue.Dequeue(), queue.Dequeue());
-                queue.Enqueue(binTree);
-            }
-
-            var binaryTree = queue.Dequeue();
-            binaryTree.GetCharToCode(new StringBuilder(), ref _CharToCode);
+            var tree = BinaryTree.Create(frequencyDict.ToList());
+            tree.GetCharToCode(ref _CharToCode);
             foreach (var pair in _CharToCode)
             {
                 _CodeToChar.Add(pair.Value, pair.Key);

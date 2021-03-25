@@ -37,7 +37,7 @@ namespace WPF
             if (item.Header.ToString()[0] == 'З')
             {
                 tbEncodedText.Text = algorithm.Encode(tbText.Text);
-                tbCharToCode.Text = algorithm.GetCharToCode();
+                tbCharToCode.Text = algorithm.ToString();
             }
             else if (item.Header.ToString()[0] == 'Д')
             {
@@ -77,15 +77,23 @@ namespace WPF
                     ret = new HuffmanCode.HuffmanCode();
                     AlgorithmsUsed.Add(ret);
                     return ret;
+
+                case "Коды Фано-Шеннона":
+                    ICompression rets = AlgorithmsUsed.FirstOrDefault(x => x is ShannonFanoCodes.ShannonFanoCodes);
+                    if (rets != null) return rets;
+                    rets = new ShannonFanoCodes.ShannonFanoCodes();
+                    AlgorithmsUsed.Add(rets);
+                    return rets;
             }
             return null;
         }
 
         private void MenuItem_Clear(object sender, RoutedEventArgs e)
         {
-            tbText.Text = String.Empty;
-            tbEncodedText.Text = String.Empty;
-            tbCharToCode.Text = String.Empty;
+            tbText.Text = string.Empty;
+            tbEncodedText.Text = string.Empty;
+            tbCharToCode.Text = string.Empty;
+            tbFilePath.Text = "не выбран";
         }
     }
 
