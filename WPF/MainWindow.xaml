@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
         xmlns:local="clr-namespace:WPF"
         mc:Ignorable="d"
-        Title="Алгоритмы сжатия данных" Height="450" Width="800" MinHeight="450" MinWidth="800" FontFamily="Verdana" FontSize="18">
+        Title="Алгоритмы сжатия данных" Height="450" Width="800" MinHeight="600" MinWidth="800" FontFamily="Verdana" FontSize="18">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -57,11 +58,28 @@
         <Grid Margin="10,0,10,10" MinHeight="100" Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="0.2*"/>
                 <ColumnDefinition Width="0.3*"/>
             </Grid.ColumnDefinitions>
 
             <TextBox x:Name="tbEncodedText" Height="auto" TextWrapping="Wrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,5,0"/>
-            <TextBox x:Name="tbCharToCode" Height="auto" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="5,0,0,0" Grid.Column="1"/>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="2.1*"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Процент сжатия:" TextWrapping="Wrap"  HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0"/>
+                <ed:Arc x:Name="ArcCompRatio"
+                        Fill="Red"
+                        Stretch="None"
+                        ArcThickness="10"
+                        ArcThicknessUnit="Pixel"
+                        EndAngle="0" Grid.Row="1"/>
+                <Label x:Name="lbCompRatio" Content="0%" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1"/>
+            </Grid>
+            <TextBox x:Name="tbCharToCode" Height="auto" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="5,0,0,0" Grid.Column="2"/>
         </Grid>
 
     </Grid>

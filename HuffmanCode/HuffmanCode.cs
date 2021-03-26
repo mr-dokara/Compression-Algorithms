@@ -71,7 +71,7 @@ namespace HuffmanCode
             }
 
             var binaryTree = queue.Dequeue();
-            binaryTree.GetCharToCode(new StringBuilder(), ref _CharToCode);
+            binaryTree.GetCharToCode(ref _CharToCode);
             foreach (var pair in _CharToCode)
             {
                 _CodeToChar.Add(pair.Value, pair.Key);

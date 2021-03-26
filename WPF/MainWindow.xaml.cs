@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CA_utils;
 using HuffmanCode;
+using Microsoft.Expression.Shapes;
 using Microsoft.Win32;
 
 
@@ -38,6 +39,9 @@ namespace WPF
             {
                 tbEncodedText.Text = algorithm.Encode(tbText.Text);
                 tbCharToCode.Text = algorithm.ToString();
+                double ratio = Math.Max(0.0, Math.Round(100.0 - (tbEncodedText.Text.Length / (tbText.Text.Length * 0.08)), 1));
+                ArcCompRatio.EndAngle = ratio * 3.6;
+                lbCompRatio.Content = $"~{ratio}%";
             }
             else if (item.Header.ToString()[0] == 'Д')
             {

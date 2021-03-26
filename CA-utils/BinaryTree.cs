@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
-namespace HuffmanCode
+namespace CA_utils
 {
     public class BinaryTree
     {
@@ -33,17 +32,44 @@ namespace HuffmanCode
             return temp;
         }
 
-        public void GetCharToCode(StringBuilder sb, ref Dictionary<char, string> charToCode)
+        public static BinaryTree Create(List<KeyValuePair<char, int>> freq)
         {
+            if (freq.Count == 1) return Create(freq[0].Key, freq[0].Value);
+
+            var leftList = new List<KeyValuePair<char, int>>();
+            var rightList = new List<KeyValuePair<char, int>>();
+            int left = 0, right = 0;
+
+            foreach (var pair in freq)
+            {
+                if (left < right)
+                {
+                    leftList.Add(pair);
+                    left += pair.Value;
+                }
+                else
+                {
+                    rightList.Add(pair);
+                    right += pair.Value;
+                }
+            }
+
+            return new BinaryTree {LeftChild = Create(leftList), RightChild = Create(rightList)};
+        }
+
+        public void GetCharToCode(ref Dictionary<char, string> charToCode, StringBuilder sb=null)
+        {
+            if (sb == null) sb = new StringBuilder();
+
             if (LeftChild != null)
             {
                 sb.Append("0");
-                LeftChild.GetCharToCode(sb, ref charToCode);
+                LeftChild.GetCharToCode(ref charToCode, sb);
             }
             if (RightChild != null)
             {
                 sb.Append("1");
-                RightChild.GetCharToCode(sb, ref charToCode);
+                RightChild.GetCharToCode(ref charToCode, sb);
             }
 
             if (LeftChild == null && RightChild == null)
