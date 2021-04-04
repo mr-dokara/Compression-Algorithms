@@ -2,6 +2,8 @@
 {
     public interface ICompression
     {
+        double CompressionRatio { get; }
+
         string Encode(string text);
         string Decode(string text);
         string ToString();

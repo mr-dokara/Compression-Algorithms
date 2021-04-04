@@ -1,0 +1,41 @@
+﻿<Window x:Class="WPF.Statistics"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF"
+        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
+        mc:Ignorable="d"
+        Title="Информация о сжатии" Height="291.654" Width="532.03" FontFamily="Verdana" FontSize="18" ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="134*"/>
+            <RowDefinition Height="133*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Кол-во символов в исходном тексте:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="32" Width="355"/>
+        <Label x:Name="TextLength" Content="0" HorizontalAlignment="Left" Margin="370,10,0,0" VerticalAlignment="Top" Height="32" Width="146"/>
+
+        <Label Content="Кол-во символов в сжатом тексте:" HorizontalAlignment="Left" Margin="10,47,0,0" VerticalAlignment="Top" Height="32" Width="333"/>
+        <Label x:Name="EncodedTextLength" Content="0" HorizontalAlignment="Left" Margin="348,47,0,0" VerticalAlignment="Top" Height="32" Width="168"/>
+
+        <Label Content="Коэффициент сжатия:" HorizontalAlignment="Left" Margin="10,84,0,0" VerticalAlignment="Top" Height="32" Width="220"/>
+        <Label x:Name="CompRatio" Content="0" HorizontalAlignment="Left" Margin="235,84,0,0" VerticalAlignment="Top" Height="32" Width="281"/>
+
+        <TextBlock Text="Сжатие:" TextWrapping="Wrap"  HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="214" Margin="16,48,0,0" Grid.Row="1" />
+        <Grid Margin="111,10,0,0" Grid.ColumnSpan="1" HorizontalAlignment="Left" Width="100" Height="100" VerticalAlignment="Top" Grid.Row="1">
+            <ed:Arc Fill="AntiqueWhite"
+                    Stretch="None"
+                    ArcThickness="10"
+                    ArcThicknessUnit="Pixel"
+                    EndAngle="360" Grid.Row="2"/>
+            <ed:Arc x:Name="CompRatioArc"
+                    Fill="DarkKhaki"
+                    Stretch="None"
+                    ArcThickness="10"
+                    ArcThicknessUnit="Pixel"
+                    EndAngle="100" Grid.Row="2"/>
+            <Label x:Name="CompRatioText" Content="в N раз" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+        </Grid>
+
+    </Grid>
+</Window>

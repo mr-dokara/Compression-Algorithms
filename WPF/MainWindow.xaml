@@ -19,22 +19,23 @@
 
         <Menu FontFamily="Verdana">
             <MenuItem Header="Файл" FontSize="17">
-                <MenuItem Header="Открыть" Click="MenuItem_Open"/>
-                <MenuItem Header="Очистить" Click="MenuItem_Clear"/>
+                <MenuItem Header="Открыть (.txt)" Click="MenuItem_Click_Open"/>
+                <MenuItem Header="Открыть (.ef)" Click="MenuItem_Click_OpenEF"/>
+                <MenuItem Header="Очистить" Click="MenuItem_Click_Clear"/>
                 <Separator/>
-                <MenuItem Header="Сохранить"/>
-                <MenuItem Header="Сохранить как"/>
+                <MenuItem Header="Сохранить" Click="MenuItem_Click_Save"/>
+                <MenuItem Header="Сохранить как" Click="MenuItem_Click_SaveAs"/>
                 <Separator/>
                 <MenuItem x:Name="MenuAlgorithms" Header="Выйти"/>
             </MenuItem>
             <MenuItem Header="Алгоритмы" FontSize="17">
                 <MenuItem Header="Коды Хаффмана">
-                    <MenuItem Header="Закодировать" Click="MenuItem_Click"/>
-                    <MenuItem Header="Декодировать" Click="MenuItem_Click"/>
+                    <MenuItem Header="Закодировать" Click="MenuItems_Click_Algorithms"/>
+                    <MenuItem Header="Декодировать" Click="MenuItems_Click_Algorithms"/>
                 </MenuItem>
                 <MenuItem Header="Коды Фано-Шеннона">
-                    <MenuItem Header="Закодировать" Click="MenuItem_Click"/>
-                    <MenuItem Header="Декодировать" Click="MenuItem_Click"/>
+                    <MenuItem Header="Закодировать" Click="MenuItems_Click_Algorithms"/>
+                    <MenuItem Header="Декодировать" Click="MenuItems_Click_Algorithms"/>
                 </MenuItem>
             </MenuItem>
         </Menu>
@@ -58,29 +59,13 @@
         <Grid Margin="10,0,10,10" MinHeight="100" Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="0.2*"/>
-                <ColumnDefinition Width="0.3*"/>
+                <ColumnDefinition Width="0.4*"/>
             </Grid.ColumnDefinitions>
 
             <TextBox x:Name="tbEncodedText" Height="auto" TextWrapping="Wrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,5,0"/>
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="2.1*"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-
-                <TextBlock Text="Процент сжатия:" TextWrapping="Wrap"  HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0"/>
-                <ed:Arc x:Name="ArcCompRatio"
-                        Fill="Red"
-                        Stretch="None"
-                        ArcThickness="10"
-                        ArcThicknessUnit="Pixel"
-                        EndAngle="0" Grid.Row="1"/>
-                <Label x:Name="lbCompRatio" Content="0%" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1"/>
-            </Grid>
             <TextBox x:Name="tbCharToCode" Height="auto" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="5,0,0,0" Grid.Column="2"/>
         </Grid>
+        <Button x:Name="btnStatistics" Content="Подробная информация о сжатии" HorizontalAlignment="Right" Height="24" Margin="0,13,10,0" Grid.Row="4" VerticalAlignment="Top" Width="328" Click="Button_Click_Statistics" IsEnabled="False"/>
 
     </Grid>
 </Window>

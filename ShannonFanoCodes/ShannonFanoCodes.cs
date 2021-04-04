@@ -12,6 +12,14 @@ namespace ShannonFanoCodes
         private Dictionary<char, string> _CharToCode;
         private Dictionary<string, char> _CodeToChar;
 
+        private string _lastStr = String.Empty;
+        private string _lastEncodedStr = String.Empty;
+
+        public double CompressionRatio
+        {
+            get { return Math.Max(0.0, Math.Round(_lastStr.Length * 8.0 / _lastEncodedStr.Length, 5)); }
+        }
+
         public string Encode(string text)
         {
             BuildingCode(text);
@@ -19,6 +27,7 @@ namespace ShannonFanoCodes
             var sb = new StringBuilder();
             foreach (var ch in text)
             { sb.Append(_CharToCode[ch]); }
+            _lastEncodedStr = sb.ToString();
             return sb.ToString();
         }
 
