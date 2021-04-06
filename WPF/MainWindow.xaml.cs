@@ -152,11 +152,10 @@ namespace WPF
             var stat = new Statistics();
             stat.TextLength.Content = tbText.Text.Length;
             stat.EncodedTextLength.Content = tbEncodedText.Text.Length;
-            stat.CompRatio.Content = Math.Max(0.0, Math.Round(tbText.Text.Length * 8.0 / tbEncodedText.Text.Length, 5));
-            stat.CompRatioArc.EndAngle = Math.Max(0.0, Math.Round(100.0 - (tbEncodedText.Text.Length / (tbText.Text.Length * 0.08)), 1)) * 3.6;
-            stat.CompRatioText.Content = $"в {Math.Max(0.0, Math.Round(tbText.Text.Length * 8.0 / tbEncodedText.Text.Length, 1))} раз";
+            stat.CompRatio.Content = _LastAlgorithm.CompressionRatio;
+            stat.CompRatioArc.EndAngle = Math.Max(0, 100.0 / _LastAlgorithm.CompressionRatio) * 3.6;
+            stat.CompRatioText.Content = $"в {_LastAlgorithm.CompressionRatio} раз";
             stat.ShowDialog();
-
         }
     }
 }
