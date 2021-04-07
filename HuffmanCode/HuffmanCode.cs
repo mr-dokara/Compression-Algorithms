@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using CA_utils;
 
 namespace HuffmanCode
@@ -30,7 +31,6 @@ namespace HuffmanCode
             var sb = new StringBuilder();
             foreach (var ch in text)
             { sb.Append(CharToCode[ch]); }
-
             _lastEncodedStr = sb.ToString();
             return sb.ToString();
         }

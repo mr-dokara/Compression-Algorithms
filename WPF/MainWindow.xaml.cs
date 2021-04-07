@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using CA_utils;
+using Microsoft.Expression.Shapes;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 
@@ -14,12 +18,13 @@ namespace WPF
 {
     public partial class MainWindow : Window
     {
-        private HashSet<ICompression> _AlgorithmsUsed = new HashSet<ICompression>();
+        private object locker = new object();
         private ICompression _LastAlgorithm;
 
         public MainWindow()
         {
             InitializeComponent();
+
         }
 
         private ICompression GetAlgorithm(string name)
@@ -27,25 +32,19 @@ namespace WPF
             switch (name)
             {
                 case "Коды Хаффмана":
-                    ICompression ret = _AlgorithmsUsed.FirstOrDefault(x => x is HuffmanCode.HuffmanCode);
-                    if (ret != null) return ret;
-                    ret = new HuffmanCode.HuffmanCode();
-                    _AlgorithmsUsed.Add(ret);
-                    return ret;
+                    if (_LastAlgorithm is HuffmanCode.HuffmanCode) return _LastAlgorithm;
+                    return new HuffmanCode.HuffmanCode();
 
                 case "Коды Фано-Шеннона":
-                    ICompression rets = _AlgorithmsUsed.FirstOrDefault(x => x is ShannonFanoCodes.ShannonFanoCodes);
-                    if (rets != null) return rets;
-                    rets = new ShannonFanoCodes.ShannonFanoCodes();
-                    _AlgorithmsUsed.Add(rets);
-                    return rets;
+                    if (_LastAlgorithm is ShannonFanoCodes.ShannonFanoCodes) return _LastAlgorithm;
+                    return new ShannonFanoCodes.ShannonFanoCodes();
             }
             return null;
         }
 
-        private void SaveFile(string text, bool dialog=false)
+        private void SaveFile(string text, bool dialog = false)
         {
-            string path = $"{DateTime.Now.Millisecond}.ef";
+            string path = $"{DateTime.Now.ToString("d")}.ef";
             if (dialog)
             {
                 var sfd = new SaveFileDialog();
@@ -69,41 +68,90 @@ namespace WPF
             tbFilePath.Text = "не выбран";
         }
 
+        private async void StartLoadingAnimationAsync(CancellationToken token, bool infinite = false)
+        {
+            LoadingGrid.Visibility = Visibility.Visible;
+            await Task.Run(() =>
+            {
+                do
+                {
+                    for (int i = 0; i < 360; i += 10)
+                    {
+                        arcLoading.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            arcLoading.StartAngle = i;
+                            arcLoading.EndAngle = i + 60;
+                        }));
+
+                        Task.Delay(5).Wait();
+                    }
+                } while (infinite && !token.IsCancellationRequested);
+            }, token);
+        }
+
+        private async void EncodeAsync(ICompression algorithm, string text, CancellationTokenSource src)
+        {
+            await Task.Run(() => algorithm.Encode(text)).ContinueWith(task =>
+            {
+                _LastAlgorithm = algorithm;
+                Dispatcher.BeginInvoke(new Action((() =>
+                {
+                    tbEncodedText.Text = task.Result;
+                    tbCharToCode.Text = algorithm.ToString();
+                    btnStatistics.IsEnabled = true;
+                    src.Cancel();
+                    LoadingGrid.Visibility = Visibility.Hidden;
+                })));
+                //tbEncodedText.Dispatcher.BeginInvoke(new Action(() => tbEncodedText.Text = task.Result));
+                //tbCharToCode.Dispatcher.BeginInvoke(new Action(() => tbCharToCode.Text = algorithm.ToString()));
+                //btnStatistics.Dispatcher.BeginInvoke(new Action(() => btnStatistics.IsEnabled = true));
+                //src.Cancel();
+                //LoadingGrid.Dispatcher.BeginInvoke(new Action(() => LoadingGrid.Visibility = Visibility.Hidden));
+            });
+        }
+
+        private async void DecodeAsync(ICompression algorithm, string enText, CancellationTokenSource src)
+        {
+            await Task.Run(async () =>
+            {
+                try
+                {
+                    var decodedText = algorithm.Decode(enText);
+                    lock (locker)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            tbText.Text = decodedText;
+                            btnStatistics.IsEnabled = true;
+                            src.Cancel();
+                        });
+                    }
+                }
+                catch
+                {
+                    Dispatcher.Invoke(() => MessageBox.Show("Невозможно раскодировать файл выбранным алгоритмом!",
+                        "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error));
+                }
+            });
+        }
+
         private void MenuItems_Click_Algorithms(object sender, RoutedEventArgs e)
         {
             MenuItem item = sender as MenuItem;
             ICompression algorithm = GetAlgorithm((item.Parent as MenuItem).Header.ToString());
+            var text = tbText.Text;
+            var enText = tbEncodedText.Text;
+            var src = new CancellationTokenSource();
 
             if (item.Header.ToString()[0] == 'З')
             {
-                _LastAlgorithm = algorithm;
-                tbEncodedText.Text = algorithm.Encode(tbText.Text);
-                tbCharToCode.Text = algorithm.ToString();
-
-                btnStatistics.IsEnabled = true;
-                
+                StartLoadingAnimationAsync(src.Token, true);
+                EncodeAsync(algorithm, text, src);
             }
             else if (item.Header.ToString()[0] == 'Д')
             {
-                string decodedText = string.Empty;
-                try
-                {
-                    decodedText = algorithm.Decode(tbEncodedText.Text);
-                    tbText.Text = decodedText;
-                    btnStatistics.IsEnabled = true;
-                }
-                catch
-                {
-                    _AlgorithmsUsed.Remove(algorithm);
-                    algorithm = GetAlgorithm((item.Parent as MenuItem).Header.ToString());
-                    try
-                    {
-                        decodedText = algorithm.Decode(tbEncodedText.Text);
-                        tbText.Text = decodedText;
-                        btnStatistics.IsEnabled = true;
-                    }
-                    catch { MessageBox.Show("Невозможно раскодировать файл выбранным алгоритмом!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
-                }
+                StartLoadingAnimationAsync(src.Token, true);
+                DecodeAsync(algorithm, text, src);
             }
         }
 
@@ -115,6 +163,7 @@ namespace WPF
             if (ofd.ShowDialog() == true)
             {
                 Clear();
+                var src = new CancellationTokenSource();
                 tbFilePath.Text = ofd.FileName;
                 tbText.Text = File.ReadAllText(ofd.FileName);
             }
@@ -128,23 +177,21 @@ namespace WPF
             if (ofd.ShowDialog() == true)
             {
                 Clear();
-                    var ef = JsonConvert.DeserializeObject<EF>(File.ReadAllText(ofd.FileName));
-                    _LastAlgorithm = JsonConvert.DeserializeObject(ef.Algorithm, ef.AlgorithmType) as ICompression;
-                    _AlgorithmsUsed.Remove(_AlgorithmsUsed.FirstOrDefault(x => x.GetType() == ef.AlgorithmType));
-                    _AlgorithmsUsed.Add(_LastAlgorithm);
-                    tbFilePath.Text = ofd.FileName + $" (Алгоритм: {ef.AlgorithmType.Namespace})";
+                var ef = JsonConvert.DeserializeObject<EF>(File.ReadAllText(ofd.FileName));
+                _LastAlgorithm = JsonConvert.DeserializeObject(ef.Algorithm, ef.AlgorithmType) as ICompression;
+                tbFilePath.Text = ofd.FileName + $" (Алгоритм: {ef.AlgorithmType.Namespace})";
                 tbEncodedText.Text = ef.EncodedText;
-                    tbCharToCode.Text = _LastAlgorithm.ToString();
+                tbCharToCode.Text = _LastAlgorithm.ToString();
             }
         }
 
-        private void MenuItem_Click_Clear(object sender, RoutedEventArgs e) 
+        private void MenuItem_Click_Clear(object sender, RoutedEventArgs e)
             => Clear();
 
-        private void MenuItem_Click_Save(object sender, RoutedEventArgs e) 
+        private void MenuItem_Click_Save(object sender, RoutedEventArgs e)
             => SaveFile(tbEncodedText.Text);
 
-        private void MenuItem_Click_SaveAs(object sender, RoutedEventArgs e) 
+        private void MenuItem_Click_SaveAs(object sender, RoutedEventArgs e)
             => SaveFile(tbEncodedText.Text, true);
 
         private void Button_Click_Statistics(object sender, RoutedEventArgs e)
