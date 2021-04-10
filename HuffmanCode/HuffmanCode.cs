@@ -11,13 +11,36 @@ namespace HuffmanCode
     {
         public Dictionary<char, string> CharToCode;
         public Dictionary<string, char> CodeToChar;
+        
+        public Dictionary<char, int> FreqDictionary
+        {
+            get { return _freqDictionary; }
 
-        private string _lastStr = String.Empty;
-        private string _lastEncodedStr = String.Empty;
+            set
+            {
+                _freqDictionary = value;
+                int sum = _freqDictionary.Sum(x => x.Value);
+                _probabilities = new Dictionary<char, double>();
+                foreach (var pair in _freqDictionary)
+                { _probabilities.Add(pair.Key, (double)pair.Value/sum); }
+            }
+        }
+
+        private Dictionary<char, int> _freqDictionary;
+        private Dictionary<char, double> _probabilities;
+        private string _lastStr = string.Empty;
+        private string _lastEncodedStr = string.Empty;
+
+
 
         public double CompressionRatio
         {
             get { return Math.Max(0.0, Math.Round(_lastStr.Length * 8.0 / _lastEncodedStr.Length, 5)); }
+        }
+
+        public double AverageLength
+        {
+            get { return Math.Max(0.0, CodeToChar.Sum(x => x.Key.Length * _probabilities[x.Value])); }
         }
 
         public string Encode(string text)
@@ -62,18 +85,18 @@ namespace HuffmanCode
             CharToCode = new Dictionary<char, string>();
             CodeToChar = new Dictionary<string, char>();
 
-            var frequencyDict = CA_Utils.GetFrequencyDict(text);
+            FreqDictionary = CA_Utils.GetFrequencyDict(text);
 
-            if (frequencyDict.Keys.Count == 1)
+            if (FreqDictionary.Keys.Count == 1)
             {
-                char temp = frequencyDict.First(x => true).Key;
+                char temp = FreqDictionary.First(x => true).Key;
                 CharToCode.Add(temp, "0");
                 CodeToChar.Add("0", temp);
                 return;
             }
 
             PriorityQueue queue = new PriorityQueue();
-            foreach (var pair in frequencyDict)
+            foreach (var pair in FreqDictionary)
             {
                 queue.Enqueue(BinaryTree.Create(pair.Key, pair.Value));
             }

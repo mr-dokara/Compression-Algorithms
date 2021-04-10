@@ -12,12 +12,33 @@ namespace ShannonFanoCodes
         public Dictionary<char, string> CharToCode;
         public Dictionary<string, char> CodeToChar;
 
-        private string _lastStr = String.Empty;
-        private string _lastEncodedStr = String.Empty;
+        public Dictionary<char, int> FreqDictionary
+        {
+            get { return _freqDictionary; }
+
+            set
+            {
+                _freqDictionary = value;
+                int sum = _freqDictionary.Sum(x => x.Value);
+                _probabilities = new Dictionary<char, double>();
+                foreach (var pair in _freqDictionary)
+                { _probabilities.Add(pair.Key, (double)pair.Value / sum); }
+            }
+        }
+
+        private Dictionary<char, int> _freqDictionary;
+        private Dictionary<char, double> _probabilities;
+        private string _lastStr = string.Empty;
+        private string _lastEncodedStr = string.Empty;
 
         public double CompressionRatio
         {
-            get { return Math.Max(0.0, Math.Round(_lastStr.Length * 8.0 / _lastEncodedStr.Length, 5)); }
+            get { return Math.Max(0.0, _lastStr.Length * 8.0 / _lastEncodedStr.Length); }
+        }
+
+        public double AverageLength
+        {
+            get { return Math.Max(0.0, CodeToChar.Sum(x => x.Key.Length * _probabilities[x.Value])); }
         }
 
         public string Encode(string text)
@@ -62,18 +83,18 @@ namespace ShannonFanoCodes
             CharToCode = new Dictionary<char, string>();
             CodeToChar = new Dictionary<string, char>();
 
-            var frequencyDict = CA_Utils.GetFrequencyDict(text);
+            FreqDictionary = CA_Utils.GetFrequencyDict(text);
 
-            if (frequencyDict.Keys.Count == 1)
+            if (FreqDictionary.Keys.Count == 1)
             {
-                char temp = frequencyDict.First(x => true).Key;
+                char temp = FreqDictionary.First(x => true).Key;
                 CharToCode.Add(temp, "0");
                 CodeToChar.Add("0", temp);
                 return;
             }
 
 
-            var tree = BinaryTree.Create(frequencyDict.ToList());
+            var tree = BinaryTree.Create(FreqDictionary.ToList());
             tree.GetCharToCode(ref CharToCode);
             foreach (var pair in CharToCode)
             {

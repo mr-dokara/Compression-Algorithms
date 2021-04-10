@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,13 +20,12 @@ namespace WPF
 {
     public partial class MainWindow : Window
     {
-        private object locker = new object();
         private ICompression _LastAlgorithm;
+        private bool resultInFile = false;
 
         public MainWindow()
         {
             InitializeComponent();
-
         }
 
         private ICompression GetAlgorithm(string name)
@@ -44,16 +45,16 @@ namespace WPF
 
         private void SaveFile(string text, bool dialog = false)
         {
-            string path = $"{DateTime.Now.ToString("d")}.ef";
+            string path = $"New Encoded File ({DateTime.Now.ToString("d")}).ef";
             if (dialog)
             {
                 var sfd = new SaveFileDialog();
                 sfd.Filter = "Encoded files|*.ef";
-                sfd.FileName = "New Encoded File";
+                sfd.FileName = $"New Encoded File ({DateTime.Now.ToString("d")}).ef";
                 if (sfd.ShowDialog() == true) path = sfd.FileName;
             }
 
-            var ef = new EF { AlgorithmType = _LastAlgorithm.GetType(), Algorithm = JsonConvert.SerializeObject(_LastAlgorithm), EncodedText = tbEncodedText.Text };
+            var ef = new EF { AlgorithmType = _LastAlgorithm.GetType(), Algorithm = JsonConvert.SerializeObject(_LastAlgorithm), EncodedText = (resultInFile?File.ReadAllText("result.txt"):tbEncodedText.Text) };
 
             using (var sw = new StreamWriter(path))
             { sw.WriteLine(JsonConvert.SerializeObject(ef)); }
@@ -61,11 +62,14 @@ namespace WPF
 
         private void Clear()
         {
-            btnStatistics.IsEnabled = false;
+            if (last != null) last.IsEnabled = false;
             tbText.Text = string.Empty;
             tbEncodedText.Text = string.Empty;
             tbCharToCode.Text = string.Empty;
             tbFilePath.Text = "не выбран";
+            tb1CompRatio.Text = "в ? раз";
+            tb2CompRatio.Text = "?";
+            tbAvrLength.Text = "?";
         }
 
         private async void StartLoadingAnimationAsync(CancellationToken token, bool infinite = false)
@@ -91,50 +95,81 @@ namespace WPF
 
         private async void EncodeAsync(ICompression algorithm, string text, CancellationTokenSource src)
         {
-            await Task.Run(() => algorithm.Encode(text)).ContinueWith(task =>
+            await Task.Run(() =>
             {
+                var result = algorithm.Encode(text);
                 _LastAlgorithm = algorithm;
-                Dispatcher.BeginInvoke(new Action((() =>
+
+                Dispatcher.Invoke((() =>
                 {
-                    tbEncodedText.Text = task.Result;
                     tbCharToCode.Text = algorithm.ToString();
-                    btnStatistics.IsEnabled = true;
+                    tb1CompRatio.Text = $"в {Math.Round(algorithm.CompressionRatio, 2)} раз";
+                    var anim = new DoubleAnimation { From = 360, To = arcCompRatio.EndAngle = (100.0 / algorithm.CompressionRatio) * 3.6, Duration = TimeSpan.FromSeconds(1) };
+                    arcCompRatio.BeginAnimation(Arc.EndAngleProperty, anim);
+                    tb2CompRatio.Text = Math.Round(algorithm.CompressionRatio, 5).ToString();
+                    tbAvrLength.Text = Math.Round(algorithm.AverageLength, 5).ToString();
+                    resultInFile = false;
                     src.Cancel();
                     LoadingGrid.Visibility = Visibility.Hidden;
-                })));
-                //tbEncodedText.Dispatcher.BeginInvoke(new Action(() => tbEncodedText.Text = task.Result));
-                //tbCharToCode.Dispatcher.BeginInvoke(new Action(() => tbCharToCode.Text = algorithm.ToString()));
-                //btnStatistics.Dispatcher.BeginInvoke(new Action(() => btnStatistics.IsEnabled = true));
-                //src.Cancel();
-                //LoadingGrid.Dispatcher.BeginInvoke(new Action(() => LoadingGrid.Visibility = Visibility.Hidden));
+                    if (result.Length <= Math.Pow(2, 22)) tbEncodedText.Text = result;
+                    else
+                    {
+                        using (var sw = new StreamWriter("result.txt")) { sw.Write(result); }
+                        if (MessageBox.Show(
+                            "Закодированный текст слишком большой,\nрезультат сохранен в файл 'result.txt'\nПопытаться вывести результат в программе?",
+                            "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes) tbEncodedText.Text = result;
+                        else
+                        {
+                            resultInFile = true;
+                            tbEncodedText.Text = "Закодированный текст слишком большой, результат сохранен в файл 'result.txt'. При следующей операции декодирования будет обработан файл вывода ('result.txt').";
+                        }
+                    }
+                    
+                }));
             });
         }
 
         private async void DecodeAsync(ICompression algorithm, string enText, CancellationTokenSource src)
         {
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 try
                 {
-                    var decodedText = algorithm.Decode(enText);
-                    lock (locker)
+                    var result = algorithm.Decode(enText);
+                    _LastAlgorithm = algorithm;
+
+                    Dispatcher.Invoke(() =>
                     {
-                        Dispatcher.Invoke(() =>
-                        {
-                            tbText.Text = decodedText;
-                            btnStatistics.IsEnabled = true;
-                            src.Cancel();
-                        });
-                    }
+                        tbCharToCode.Text = algorithm.ToString();
+                        tb1CompRatio.Text = $"в {Math.Round(algorithm.CompressionRatio, 2)} раз";
+                        var anim = new DoubleAnimation { From = 360, To = arcCompRatio.EndAngle = (100.0 / algorithm.CompressionRatio) * 3.6, Duration = TimeSpan.FromSeconds(1) };
+                        arcCompRatio.BeginAnimation(Arc.EndAngleProperty, anim);
+                        tb2CompRatio.Text = Math.Round(algorithm.CompressionRatio, 5).ToString();
+                        tbAvrLength.Text = Math.Round(algorithm.AverageLength, 5).ToString();
+                        tbText.Text = result;
+                    });
                 }
                 catch
                 {
-                    Dispatcher.Invoke(() => MessageBox.Show("Невозможно раскодировать файл выбранным алгоритмом!",
-                        "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error));
+                    Dispatcher.Invoke(() =>
+                    {
+                        MessageBox.Show("Невозможно декодировать текст текущим словарём символ-код!",
+                            "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        Clear();
+                    });
+                }
+                finally
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        src.Cancel();
+                        LoadingGrid.Visibility = Visibility.Hidden;
+                    });
                 }
             });
         }
 
+        private MenuItem last;
         private void MenuItems_Click_Algorithms(object sender, RoutedEventArgs e)
         {
             MenuItem item = sender as MenuItem;
@@ -147,11 +182,15 @@ namespace WPF
             {
                 StartLoadingAnimationAsync(src.Token, true);
                 EncodeAsync(algorithm, text, src);
+                if (last != null) last.IsEnabled = false;
+                last = (item.Parent as MenuItem).Items.SourceCollection.Cast<MenuItem>().First(x => x.Header.ToString() == "Декодировать");
+                last.IsEnabled = true;
             }
             else if (item.Header.ToString()[0] == 'Д')
             {
                 StartLoadingAnimationAsync(src.Token, true);
-                DecodeAsync(algorithm, text, src);
+                if (resultInFile) DecodeAsync(algorithm, File.ReadAllText("result.txt"), src);
+                else DecodeAsync(algorithm, enText, src);
             }
         }
 
@@ -194,15 +233,7 @@ namespace WPF
         private void MenuItem_Click_SaveAs(object sender, RoutedEventArgs e)
             => SaveFile(tbEncodedText.Text, true);
 
-        private void Button_Click_Statistics(object sender, RoutedEventArgs e)
-        {
-            var stat = new Statistics();
-            stat.TextLength.Content = tbText.Text.Length;
-            stat.EncodedTextLength.Content = tbEncodedText.Text.Length;
-            stat.CompRatio.Content = _LastAlgorithm.CompressionRatio;
-            stat.CompRatioArc.EndAngle = Math.Max(0, 100.0 / _LastAlgorithm.CompressionRatio) * 3.6;
-            stat.CompRatioText.Content = $"в {_LastAlgorithm.CompressionRatio} раз";
-            stat.ShowDialog();
-        }
+        private void MenuItem_OnClick(object sender, RoutedEventArgs e) 
+            => Application.Current.Shutdown();
     }
 }
