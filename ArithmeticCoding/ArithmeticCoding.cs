@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using CA_utils;
@@ -72,7 +73,7 @@ namespace ArithmeticCoding
 
         public string Decode(string text)
         {
-            Fraction code = Fraction.Parse(text);
+            var code = new Fraction(BigInteger.Parse(text.Split('/')[0]), BigInteger.Parse(text.Split('/')[1]));
             var sb = new StringBuilder();
 
             var segments = new Dictionary<char, KeyValuePair<Fraction, Fraction>>();

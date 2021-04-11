@@ -8,7 +8,6 @@ namespace ArithmeticCoding
     {
         public BigInteger Numerator { get; set; }
         public BigInteger Denominator { get; set; }
-
         public Fraction(BigInteger numerator, BigInteger denominator)
         {
             if (denominator == 0) throw new DivideByZeroException();

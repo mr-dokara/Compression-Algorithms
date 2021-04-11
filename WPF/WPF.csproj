@@ -117,6 +117,10 @@
       <Project>{8b56e438-1ac9-43ac-93b0-7e3b7f90de83}</Project>
       <Name>HuffmanCode</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RLEandBWT\RLEandBWT.csproj">
+      <Project>{866da06f-6d10-42ed-9fbd-32e5d6167a28}</Project>
+      <Name>RLEandBWT</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ShannonFanoCodes\ShannonFanoCodes.csproj">
       <Project>{6bd00cf5-efe8-46c5-80e9-781a55614469}</Project>
       <Name>ShannonFanoCodes</Name>

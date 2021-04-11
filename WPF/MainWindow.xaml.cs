@@ -44,6 +44,10 @@ namespace WPF
                 case "Арифметическое кодирование":
                     if (_LastAlgorithm is ArithmeticCoding.ArithmeticCoding) return _LastAlgorithm;
                     return new ArithmeticCoding.ArithmeticCoding();
+
+                case "BWT + RLE":
+                    if (_LastAlgorithm is RLEandBWT.RLEandBWT) return _LastAlgorithm;
+                    return new RLEandBWT.RLEandBWT();
             }
             return null;
         }
@@ -176,6 +180,8 @@ namespace WPF
         private MenuItem last;
         private void MenuItems_Click_Algorithms(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(tbText.Text)) return;
+
             MenuItem item = sender as MenuItem;
             ICompression algorithm = GetAlgorithm((item.Parent as MenuItem).Header.ToString());
             var text = tbText.Text;

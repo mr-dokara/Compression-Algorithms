@@ -41,6 +41,10 @@
                     <MenuItem Header="Закодировать" Click="MenuItems_Click_Algorithms"/>
                     <MenuItem Header="Декодировать" Click="MenuItems_Click_Algorithms" IsEnabled="False"/>
                 </MenuItem>
+                <MenuItem Header="BWT + RLE">
+                    <MenuItem Header="Закодировать" Click="MenuItems_Click_Algorithms"/>
+                    <MenuItem Header="Декодировать" Click="MenuItems_Click_Algorithms" IsEnabled="False"/>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <Grid Grid.Row="1" Margin="10,5,10,0">
@@ -80,7 +84,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Content="Закодированный текст:" HorizontalAlignment="Left" FontWeight="Bold"/>
-                <Label Content="Словарь (символ-код):" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" FontWeight="Bold" Grid.Column="2"/>
+                <Label Content="Словарь:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" FontWeight="Bold" Grid.Column="2"/>
                 <Grid Margin="10,0,10, 0" MinHeight="100" Grid.Row="1" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
