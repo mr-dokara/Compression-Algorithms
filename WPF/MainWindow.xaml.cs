@@ -14,6 +14,7 @@ using CA_utils;
 using Microsoft.Expression.Shapes;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using ArithmeticCoding;
 
 
 namespace WPF
@@ -39,6 +40,10 @@ namespace WPF
                 case "Коды Фано-Шеннона":
                     if (_LastAlgorithm is ShannonFanoCodes.ShannonFanoCodes) return _LastAlgorithm;
                     return new ShannonFanoCodes.ShannonFanoCodes();
+
+                case "Арифметическое кодирование":
+                    if (_LastAlgorithm is ArithmeticCoding.ArithmeticCoding) return _LastAlgorithm;
+                    return new ArithmeticCoding.ArithmeticCoding();
             }
             return null;
         }
@@ -124,7 +129,6 @@ namespace WPF
                             tbEncodedText.Text = "Закодированный текст слишком большой, результат сохранен в файл 'result.txt'. При следующей операции декодирования будет обработан файл вывода ('result.txt').";
                         }
                     }
-                    
                 }));
             });
         }

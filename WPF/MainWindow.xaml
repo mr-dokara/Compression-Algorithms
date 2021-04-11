@@ -37,9 +37,12 @@
                     <MenuItem Header="Закодировать" Click="MenuItems_Click_Algorithms"/>
                     <MenuItem Header="Декодировать" Click="MenuItems_Click_Algorithms" IsEnabled="False"/>
                 </MenuItem>
+                <MenuItem Header="Арифметическое кодирование">
+                    <MenuItem Header="Закодировать" Click="MenuItems_Click_Algorithms"/>
+                    <MenuItem Header="Декодировать" Click="MenuItems_Click_Algorithms" IsEnabled="False"/>
+                </MenuItem>
             </MenuItem>
         </Menu>
-
         <Grid Grid.Row="1" Margin="10,5,10,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="70"/>
@@ -88,7 +91,7 @@
                         <avalonedit:TextEditor x:Name="tbEncodedText" WordWrap="True"/>
                     </Border>
                     <Border BorderThickness="1" BorderBrush="#FFA4A4A4" Margin="5,0,0,0" Grid.Column="1">
-                        <avalonedit:TextEditor x:Name="tbCharToCode"/>
+                        <avalonedit:TextEditor x:Name="tbCharToCode" IsReadOnly="True"/>
                     </Border>
                 </Grid>
 

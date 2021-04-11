@@ -105,6 +105,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ArithmeticCoding\ArithmeticCoding.csproj">
+      <Project>{5ec6df38-bf23-4d69-b324-0c4f70e08d1e}</Project>
+      <Name>ArithmeticCoding</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CA-utils\CA-utils.csproj">
       <Project>{2b5b764e-178c-4091-a6e7-44103f242036}</Project>
       <Name>CA-utils</Name>

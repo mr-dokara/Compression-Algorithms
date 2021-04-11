@@ -35,7 +35,7 @@ namespace HuffmanCode
 
         public double CompressionRatio
         {
-            get { return Math.Max(0.0, Math.Round(_lastStr.Length * 8.0 / _lastEncodedStr.Length, 5)); }
+            get { return Math.Max(0.0, _lastStr.Length * 8.0 / _lastEncodedStr.Length); }
         }
 
         public double AverageLength
