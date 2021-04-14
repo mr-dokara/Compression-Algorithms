@@ -68,7 +68,7 @@ namespace ArithmeticCoding
             }
 
             _lastEncodedStr = ((start + end) / new Fraction(2)).ToString();
-            return ((start + end) / new Fraction(2)).Decimal;
+            return ((start + end) / new Fraction(2)).ToString();
         }
 
         public string Decode(string text)
