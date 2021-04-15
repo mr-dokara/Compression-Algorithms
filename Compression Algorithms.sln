@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArithmeticCoding", "Arithme
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RLEandBWT", "RLEandBWT\RLEandBWT.csproj", "{866DA06F-6D10-42ED-9FBD-32E5D6167A28}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LZ78", "LZ77\LZ78.csproj", "{55811FE6-5D3D-4E6E-87B8-D05DA3EBC5C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LZ77Alg", "LZ77Alg\LZ77Alg.csproj", "{1B15686C-96A8-4F46-9170-A3083263DDC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{866DA06F-6D10-42ED-9FBD-32E5D6167A28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{866DA06F-6D10-42ED-9FBD-32E5D6167A28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{866DA06F-6D10-42ED-9FBD-32E5D6167A28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55811FE6-5D3D-4E6E-87B8-D05DA3EBC5C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55811FE6-5D3D-4E6E-87B8-D05DA3EBC5C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55811FE6-5D3D-4E6E-87B8-D05DA3EBC5C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55811FE6-5D3D-4E6E-87B8-D05DA3EBC5C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B15686C-96A8-4F46-9170-A3083263DDC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B15686C-96A8-4F46-9170-A3083263DDC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B15686C-96A8-4F46-9170-A3083263DDC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B15686C-96A8-4F46-9170-A3083263DDC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
