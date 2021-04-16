@@ -28,7 +28,7 @@ namespace RLEandBWT
             _lastStr = text;
             cicleAr = new List<string>();
 
-            for (int i = 0; i < text.Length - 1; i++)
+            for (int i = 0; i < text.Length; i++)
             {
                 cicleAr.Add(text);
                 var temp = text.Substring(1);
