@@ -10,7 +10,6 @@ namespace ArithmeticCoding
 {
     public class Fraction : IComparable<Fraction>
     {
-        public const int DecimalMaxLength = 100;
         public const int ContinuedFractionMaxLength = 500;
 
         public BigInteger WholePart { get; set; }
@@ -77,7 +76,7 @@ namespace ArithmeticCoding
                 var mod = Numerator % Denominator;
                 sb.Append($"{whole + WholePart}.");
 
-                for (int i = 0; i < DecimalMaxLength && mod > 0; i++)
+                for (int i = 0; i < Denominator.ToString().Length * 2 && mod > 0; i++)
                 {
                     mod *= 10;
                     whole = mod / Denominator;
@@ -123,17 +122,26 @@ namespace ArithmeticCoding
 
         #endregion
 
-        public static Fraction Parse(string text)
+        public static Fraction ParseDecimal(string text)
         {
-            var split = text.Split('/');
+            var split = text.Split('.');
             if (split.Length == 1) return new Fraction(BigInteger.Parse(split[0]));
-            return new Fraction(BigInteger.Parse(split[0]), BigInteger.Parse(split[1]));
+            BigInteger num = 0;
+            BigInteger den = 1;
+            foreach (var ch in split[1])
+            {
+                num = BigInteger.Parse(ch.ToString()) + num * 10;
+                den *= 10;
+            }
+
+            return new Fraction(num, den);
         }
 
         public override string ToString()
         {
             if (Denominator == 1) return $"{WholePart + Numerator}";
-            return $"{(WholePart > 0? $"{WholePart} + ({Numerator}/{Denominator})":$"{Numerator}/{Denominator}")}";
+            //return $"{(WholePart > 0? $"{WholePart} + ({Numerator}/{Denominator})":$"{Numerator}/{Denominator}")}";
+            return Decimal.ToString();
         }
 
         private BigInteger GCD(BigInteger a, BigInteger b)

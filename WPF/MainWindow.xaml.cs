@@ -14,6 +14,8 @@ using CA_utils;
 using Microsoft.Expression.Shapes;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using LZ77Alg;
+using LZ78;
 using ArithmeticCoding;
 
 
@@ -48,6 +50,14 @@ namespace WPF
                 case "BWT + RLE":
                     if (_LastAlgorithm is RLEandBWT.RLEandBWT) return _LastAlgorithm;
                     return new RLEandBWT.RLEandBWT();
+
+                case "LZ77":
+                    if (_LastAlgorithm is LZ77) return _LastAlgorithm;
+                    return new LZ77();
+
+                case "LZ78":
+                    if (_LastAlgorithm is LZ78.LZ78) return _LastAlgorithm;
+                    return new LZ78.LZ78();
             }
             return null;
         }
@@ -180,8 +190,6 @@ namespace WPF
         private MenuItem last;
         private void MenuItems_Click_Algorithms(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(tbText.Text)) return;
-
             MenuItem item = sender as MenuItem;
             ICompression algorithm = GetAlgorithm((item.Parent as MenuItem).Header.ToString());
             var text = tbText.Text;
@@ -190,6 +198,7 @@ namespace WPF
 
             if (item.Header.ToString()[0] == 'З')
             {
+                if (string.IsNullOrEmpty(tbText.Text)) return;
                 StartLoadingAnimationAsync(src.Token, true);
                 EncodeAsync(algorithm, text, src);
                 if (last != null) last.IsEnabled = false;

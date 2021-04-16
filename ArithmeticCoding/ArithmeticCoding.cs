@@ -73,7 +73,7 @@ namespace ArithmeticCoding
 
         public string Decode(string text)
         {
-            var code = new Fraction(BigInteger.Parse(text.Split('/')[0]), BigInteger.Parse(text.Split('/')[1]));
+            var code = Fraction.ParseDecimal(text);
             var sb = new StringBuilder();
 
             var segments = new Dictionary<char, KeyValuePair<Fraction, Fraction>>();
