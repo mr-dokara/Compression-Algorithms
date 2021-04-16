@@ -9,7 +9,7 @@ namespace LZ77Alg
     public class LZ77 : ICompression
     {
         private double _compressionRatio = 0, _averageLength = 0;
-
+        private string _dictionary;
         public double CompressionRatio
         {
             get
@@ -74,6 +74,7 @@ namespace LZ77Alg
             }
             CompressionRatio = (double)text.Length * 8 / GetResSize(result.ToString());
             AverageLength = (double)result.Length / text.Length;
+            _dictionary = result.ToString();
             return result.ToString();
         }
 
@@ -114,6 +115,10 @@ namespace LZ77Alg
                 count += (match.ToString().Length - 3) * 4 + 8;
             }
             return count;
+        }
+        public override string ToString()
+        {
+            return _dictionary;
         }
     }
 }
