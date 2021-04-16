@@ -45,6 +45,14 @@
                     <MenuItem Header="Закодировать" Click="MenuItems_Click_Algorithms"/>
                     <MenuItem Header="Декодировать" Click="MenuItems_Click_Algorithms" IsEnabled="False"/>
                 </MenuItem>
+                <MenuItem Header="LZ77">
+                    <MenuItem Header="Закодировать" Click="MenuItems_Click_Algorithms"/>
+                    <MenuItem Header="Декодировать" Click="MenuItems_Click_Algorithms" IsEnabled="False"/>
+                </MenuItem>
+                <MenuItem Header="LZ78">
+                    <MenuItem Header="Закодировать" Click="MenuItems_Click_Algorithms"/>
+                    <MenuItem Header="Декодировать" Click="MenuItems_Click_Algorithms" IsEnabled="False"/>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <Grid Grid.Row="1" Margin="10,5,10,0">
