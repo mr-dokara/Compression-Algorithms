@@ -137,5 +137,17 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="32officeicons-16_89723.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="1486506280-infinity-endless-eternity-maths-mathematical-shows-loop_81452.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="1486506280-infinity-endless-eternity-maths-mathematical-shows-loop_81452 %281%29.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="codeoutlinedprogrammingsigns_81143.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
