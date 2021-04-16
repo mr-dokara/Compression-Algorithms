@@ -22,10 +22,6 @@
                 <MenuItem Header="Открыть (.txt)" Click="MenuItem_Click_Open" ToolTip="Открыть текстовый файл"/>
                 <MenuItem Header="Очистить всё" Click="MenuItem_Click_Clear"/>
                 <Separator/>
-                <MenuItem Header="Открыть (.ef)" Click="MenuItem_Click_OpenEF" ToolTip="Открыть закодированный файл"/>
-                <MenuItem Header="Сохранить" Click="MenuItem_Click_Save" ToolTip="Сохранить закодированный файл в папку с программой"/>
-                <MenuItem Header="Сохранить как" Click="MenuItem_Click_SaveAs" ToolTip="Сохранить закодированный файл в указанную папку"/>
-                <Separator/>
                 <MenuItem Header="Выйти" Click="MenuItem_OnClick"/>
             </MenuItem>
             <MenuItem Header="Алгоритмы" FontSize="17">

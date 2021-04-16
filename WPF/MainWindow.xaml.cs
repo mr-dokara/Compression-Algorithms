@@ -62,23 +62,6 @@ namespace WPF
             return null;
         }
 
-        private void SaveFile(string text, bool dialog = false)
-        {
-            string path = $"New Encoded File ({DateTime.Now.ToString("d")}).ef";
-            if (dialog)
-            {
-                var sfd = new SaveFileDialog();
-                sfd.Filter = "Encoded files|*.ef";
-                sfd.FileName = $"New Encoded File ({DateTime.Now.ToString("d")}).ef";
-                if (sfd.ShowDialog() == true) path = sfd.FileName;
-            }
-
-            var ef = new EF { AlgorithmType = _LastAlgorithm.GetType(), Algorithm = JsonConvert.SerializeObject(_LastAlgorithm), EncodedText = (resultInFile?File.ReadAllText("result.txt"):tbEncodedText.Text) };
-
-            using (var sw = new StreamWriter(path))
-            { sw.WriteLine(JsonConvert.SerializeObject(ef)); }
-        }
-
         private void Clear()
         {
             if (last != null) last.IsEnabled = false;
@@ -227,30 +210,8 @@ namespace WPF
             }
         }
 
-        private void MenuItem_Click_OpenEF(object sender, RoutedEventArgs e)
-        {
-            var ofd = new OpenFileDialog();
-            ofd.Filter = "Encoded files|*.ef";
-            ofd.Multiselect = false;
-            if (ofd.ShowDialog() == true)
-            {
-                Clear();
-                var ef = JsonConvert.DeserializeObject<EF>(File.ReadAllText(ofd.FileName));
-                _LastAlgorithm = JsonConvert.DeserializeObject(ef.Algorithm, ef.AlgorithmType) as ICompression;
-                tbFilePath.Text = ofd.FileName + $" (Алгоритм: {ef.AlgorithmType.Namespace})";
-                tbEncodedText.Text = ef.EncodedText;
-                tbCharToCode.Text = _LastAlgorithm.ToString();
-            }
-        }
-
         private void MenuItem_Click_Clear(object sender, RoutedEventArgs e)
             => Clear();
-
-        private void MenuItem_Click_Save(object sender, RoutedEventArgs e)
-            => SaveFile(tbEncodedText.Text);
-
-        private void MenuItem_Click_SaveAs(object sender, RoutedEventArgs e)
-            => SaveFile(tbEncodedText.Text, true);
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e) 
             => Application.Current.Shutdown();
