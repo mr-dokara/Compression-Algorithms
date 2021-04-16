@@ -14,6 +14,7 @@ namespace LZ78
         private Dictionary<string, int> _encodeStringsDict;
         private Dictionary<int, string> _decodeStringsDict;
 
+        private string _dictionary;
         private string text;
         private double averageLength = 0;
         private double compressionRatio = 0;
@@ -103,7 +104,8 @@ namespace LZ78
 
             CompressionRatio = (double)this.text.Length * 8 / EncodedDictSize(result.ToString());
             AverageLength = (double)result.Length / this.text.Length;
-            return result.ToString();
+            _dictionary = result.ToString();
+            return _dictionary;
         }
 
         private string FindStringInDictionary(int indexInText)
@@ -181,6 +183,11 @@ namespace LZ78
                 }
             }
             return result;
+        }
+
+        public override string ToString()
+        {
+            return _dictionary;
         }
     }
 }
